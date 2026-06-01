@@ -1,0 +1,22 @@
+# Build output
+target/
+*.class
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+build/
+bin/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Downloaded sample data
+data/

@@ -1,0 +1,51 @@
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+#  Copyright The original authors
+#
+#  Licensed under the Apache Software License version 2.0, available at http://www.apache.org/licenses/LICENSE-2.0
+#
+
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  # Discover every example (any top-level directory with a pom.xml) so a new
+  # example is picked up automatically — no workflow change required.
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      examples: ${{ steps.find.outputs.examples }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: find
+        run: |
+          examples=$(find . -mindepth 2 -maxdepth 2 -name pom.xml -printf '%h\n' \
+            | sed 's|^\./||' | sort | jq -R . | jq -sc .)
+          echo "examples=$examples" >> "$GITHUB_OUTPUT"
+          echo "Discovered examples: $examples"
+
+  build:
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        example: ${{ fromJson(needs.discover.outputs.examples) }}
+    name: build (${{ matrix.example }})
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - name: Build and run
+        working-directory: ${{ matrix.example }}
+        run: ./mvnw -B -q compile exec:java
