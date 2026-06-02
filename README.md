@@ -29,8 +29,10 @@ Examples that ship a `Dockerfile` / `docker-compose.yaml` can also be run with D
 
 ```shell
 cd hello-hardwood
-docker compose up --build
+docker compose run --rm --build hello-hardwood
 ```
+
+`run --rm` runs the container once and removes it on exit, so no stopped container is left behind.
 
 Sample data is downloaded into the example's `data/` folder on first run and reused after
 that. It comes from the public
