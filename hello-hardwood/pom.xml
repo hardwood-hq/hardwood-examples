@@ -23,7 +23,6 @@
         <maven.compiler.release>21</maven.compiler.release>
 
         <version.hardwood>1.0.0.CR1</version.hardwood>
-        <version.zstd>1.5.7-6</version.zstd>
         <version.exec.plugin>3.5.0</version.exec.plugin>
         <version.license.plugin>5.0.0</version.license.plugin>
         <exec.mainClass>dev.hardwood.examples.hello.Main</exec.mainClass>
@@ -53,7 +52,6 @@
         <dependency>
             <groupId>com.github.luben</groupId>
             <artifactId>zstd-jni</artifactId>
-            <version>${version.zstd}</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

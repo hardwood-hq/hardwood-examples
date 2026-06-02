@@ -33,9 +33,6 @@ cd hello-hardwood
 docker compose run --rm --build hello-hardwood
 ```
 
-`run --rm` runs the container once and removes it when the program exits, instead of
-leaving a stopped container behind.
-
 The taxi data is downloaded into a local `data/` folder on first run and reused after
 that.
 
@@ -43,6 +40,7 @@ that.
 
 ```
 Total rows: 3724889
+Row groups: 4
   VendorID : INT32
   tpep_pickup_datetime : INT64
   ...
@@ -51,7 +49,9 @@ Total rows: 3724889
 First 5 trips:
 vendor=2  distance=0.97 mi  passengers=1
 vendor=1  distance=0.90 mi  passengers=0
-...
+vendor=1  distance=1.40 mi  passengers=0
+vendor=2  distance=5.58 mi  passengers=4
+vendor=2  distance=2.16 mi  passengers=0
 
 Total fares: $77493536.48
 ```
