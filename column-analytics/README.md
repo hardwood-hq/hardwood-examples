@@ -104,4 +104,4 @@ downloads the sample file.
 - [Column-Oriented Reading](https://hardwood.dev/latest/how-to/column-reader/) ·
   [RowReader vs. ColumnReader](https://hardwood.dev/latest/concepts/reader-models/)
 - Tutorial: [Your first read](https://hardwood.dev/latest/tutorial/first-read/)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR1/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
