@@ -45,6 +45,7 @@ that. It comes from the public
 | [Hello Hardwood](./hello-hardwood) | The absolute basics — open a Parquet file, inspect its schema and footer metadata, read a few rows, and sum a column. | `ParquetFileReader`, `RowReader`, `ColumnReader`, footer metadata, typed accessors, null handling |
 | [Column Analytics](./column-analytics) | Aggregate a month of trips the columnar way — project a few columns, read batches of primitive arrays, compute totals and averages null-aware. | `ColumnReaders`, `ColumnProjection`, batched primitive arrays, hoisted `Validity` null checks |
 | [Query Controls](./query-controls) | Narrow a read with pushed-down query controls — filter, project, limit, paginate, and split by byte range — so the scan touches only the rows and columns it must. | `FilterPredicate` (numeric + logical-type overloads, `in`/`inStrings`, `not`), `ColumnProjection`, `head`, `skip`, `RowGroupPredicate.byteRange`, three-valued null logic |
+| [Multi-File](./multi-file) | Read three months of trips as one logical dataset — per-file footer counts, a single cross-file scan, and a thread pool you size yourself. | `Hardwood.openAll`, `InputFile.ofPaths`, `ParquetFileReader.isMultiFile`, `HardwoodContext`, shared pool + cross-file prefetch |
 
 <!-- New examples: add a `| [Name](./folder) | one-line description | key APIs/concepts |` row above. -->
 
