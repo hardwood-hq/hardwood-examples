@@ -47,6 +47,27 @@ jobs:
           java-version: '25'
           cache: maven
 
+      # Cache the downloaded sample data so the NYC TLC CDN is hit at most once per
+      # dataset, instead of on every run. That CDN intermittently returns 403 to CI
+      # runners (rate-limit / IP reputation), so minimizing requests keeps the build
+      # green. The key tracks Datasets.java, so changing the file to fetch re-downloads.
+      - name: Restore sample data cache
+        id: sample-data-cache
+        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7  # v5 — https://github.com/actions/cache/releases/tag/v5
+        with:
+          path: ${{ matrix.example }}/data
+          key: data-${{ matrix.example }}-${{ hashFiles(format('{0}/**/Datasets.java', matrix.example)) }}
+
       - name: Build and run
         working-directory: ${{ matrix.example }}
         run: ./mvnw -B -q compile exec:java
+
+      # Persist the data only on success, and only when we actually had to download
+      # it (a restore hit needs no re-save). This keeps a partial dataset from a
+      # failed download being frozen under the immutable key.
+      - name: Save sample data cache
+        if: success() && steps.sample-data-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7  # v5 — https://github.com/actions/cache/releases/tag/v5
+        with:
+          path: ${{ matrix.example }}/data
+          key: data-${{ matrix.example }}-${{ hashFiles(format('{0}/**/Datasets.java', matrix.example)) }}
