@@ -36,6 +36,8 @@ and prefer comments that explain *why* over *what*.
 
 # Commits
 
+Begin the commit subject with the related issue number, e.g. `#4 Add metadata-explorer example`.
+
 Focus commit message bodies on **why**, not **what** — the diff already shows the what. A short
 paragraph is usually enough; do not restate the change as a bullet list. Drop ephemeral minutiae:
 slips caught and fixed within the same branch, transient process issues, or commentary about how the
