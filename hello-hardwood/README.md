@@ -54,7 +54,12 @@ vendor=2  distance=5.58 mi  passengers=4
 vendor=2  distance=2.16 mi  passengers=0
 
 Total fares: $77493536.48
+
+(processed in: … ms)
 ```
+
+The `processed in` timer measures the reading work only — not the one-time data download —
+so the exact figure varies by machine and run.
 
 ## How it works
 

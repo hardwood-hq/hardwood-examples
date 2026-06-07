@@ -27,6 +27,9 @@ public final class Main {
     public static void main(String[] args) throws Exception {
         Path file = Datasets.yellowTaxi();
 
+        // Time the reading work only — not the one-time data download above.
+        long startNanos = System.nanoTime();
+
         try (ParquetFileReader reader = ParquetFileReader.open(InputFile.of(file))) {
 
             // 1) Schema + row count — read from the footer, no row data is decoded.
@@ -82,5 +85,8 @@ public final class Main {
                 System.out.printf("%nTotal fares: $%.2f%n", total);
             }
         }
+
+        long elapsedMillis = (System.nanoTime() - startNanos) / 1_000_000;
+        System.out.printf("%n(processed in: %,d ms)%n", elapsedMillis);
     }
 }

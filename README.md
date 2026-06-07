@@ -43,6 +43,7 @@ that. It comes from the public
 | Example | Description | Concepts touched |
 | --- | --- | --- |
 | [Hello Hardwood](./hello-hardwood) | The absolute basics — open a Parquet file, inspect its schema and footer metadata, read a few rows, and sum a column. | `ParquetFileReader`, `RowReader`, `ColumnReader`, footer metadata, typed accessors, null handling |
+| [Column Analytics](./column-analytics) | Aggregate a month of trips the columnar way — project a few columns, read batches of primitive arrays, compute totals and averages null-aware. | `ColumnReaders`, `ColumnProjection`, batched primitive arrays, hoisted `Validity` null checks |
 
 <!-- New examples: add a `| [Name](./folder) | one-line description | key APIs/concepts |` row above. -->
 
