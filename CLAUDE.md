@@ -23,6 +23,12 @@ Each example is a standalone, runnable teaching project. When creating a new one
 CI builds every example automatically: the [`build`](.github/workflows/build.yml) workflow
 discovers each top-level directory with a `pom.xml`, so a new example needs no workflow change.
 
+The root [`pom.xml`](pom.xml) is a build *aggregator* (not a parent POM) that compiles every
+example at once via `./mvnw -q compile` from the repository root. It does not change how
+examples are built in isolation — they declare their own coordinates and plugins and do not
+inherit from it. Unlike CI, the aggregator's `<modules>` list is not auto-discovered, so when
+you add a new example, add its directory to that list (keeping it sorted).
+
 # Coding
 
 Correctness is the top priority. Adhere to "fail early": validate inputs, check types, and throw on
