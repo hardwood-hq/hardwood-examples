@@ -34,6 +34,19 @@ docker compose run --rm --build hello-hardwood
 
 `run --rm` runs the container once and removes it on exit, so no stopped container is left behind.
 
+## Build every example at once
+
+A root aggregator `pom.xml` compiles all examples in one go — handy for a quick "does
+everything still build" check. Run it from the repository root with the bundled wrapper:
+
+```shell
+./mvnw -q compile
+```
+
+This is purely a build coordinator: each example stays a fully autonomous Maven project that
+does not inherit from the aggregator, so you can still build and run any one of them in complete
+isolation from its own folder.
+
 Sample data is downloaded into the example's `data/` folder on first run and reused after
 that. It comes from the public
 [NYC TLC Yellow Taxi trip-record dataset](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page).

@@ -28,6 +28,18 @@ jobs:
           echo "examples=$examples" >> "$GITHUB_OUTPUT"
           echo "Discovered examples: $examples"
 
+          # The root pom.xml is a build aggregator whose <modules> list is maintained by
+          # hand, while the examples above are discovered automatically. Guard against the
+          # two drifting apart — e.g. a new example added without registering it in the
+          # aggregator — by asserting the module list matches the discovered set exactly.
+          modules=$(grep -oP '<module>\K[^<]+(?=</module>)' pom.xml | sort | jq -R . | jq -sc .)
+          if [ "$modules" != "$examples" ]; then
+            echo "::error file=pom.xml::Root pom.xml <modules> is out of sync with the example directories."
+            echo "  discovered: $examples"
+            echo "  modules:    $modules"
+            exit 1
+          fi
+
   build:
     needs: discover
     runs-on: ubuntu-latest
