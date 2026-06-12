@@ -15,6 +15,15 @@ Each example is a standalone, runnable teaching project. When creating a new one
   output", and "How it works" sections. Keep it in sync with the code: if you change what
   `Main.java` does, those sections must reflect the new behavior. Describe what the code does and
   how to use it, not the development process or rejected alternatives.
+- **Links.** Every documentation link you add — in a README or a JavaDoc comment — must resolve
+  (no 404s). Verify each one against the live site before committing, e.g.
+  `curl -s -o /dev/null -w "%{http_code}" -L <url>` should print `200`. The docs live under
+  `https://hardwood.dev/latest/…` with these sections: `getting-started/`, `tutorial/first-read/`,
+  `how-to/<topic>/` (e.g. `row-reader`, `column-reader`, `metadata`, `multi-file`,
+  `query-controls`), `concepts/<topic>/` (e.g. `nested-columns`, `parquet-layout`,
+  `reader-models`), and `reference/<topic>/` (e.g. `accessors`, `packages`). The Javadoc is at
+  `https://hardwood.dev/api/<version>/`. The full set of valid pages is the site's sitemap:
+  `https://hardwood.dev/latest/sitemap.xml`.
 - **License headers.** Every source file carries the Apache header from `etc/license.txt`. The
   `license-maven-plugin` checks this during `./mvnw compile` and fails the build on a missing or
   malformed header; run `./mvnw license:format` to apply it. Copying `hello-hardwood/` carries the
