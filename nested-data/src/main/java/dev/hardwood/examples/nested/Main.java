@@ -58,15 +58,22 @@ public final class Main {
                 PqList phones = rows.getList("ownerPhoneNumbers");
                 System.out.println("  phones: " + (phones == null || phones.isEmpty() ? "(none)" : phones.strings()));
 
-                // structs() views the list as PqStruct flyweights; read each struct's fields by
-                // name. phoneNumber is optional — getString returns null when it is absent.
-                for (PqStruct contact : rows.getList("contacts").structs()) {
-                    String number = contact.getString("phoneNumber");
-                    if (number == null) {
-                        missingNumbers++;
+                // contacts is optional too, so guard it like phones above. structs() then views
+                // the list as PqStruct flyweights; read each struct's fields by name. phoneNumber
+                // is optional — getString returns null when it is absent.
+                PqList contacts = rows.getList("contacts");
+                if (contacts == null || contacts.isEmpty()) {
+                    System.out.println("  contacts: (none)");
+                } else {
+                    System.out.println("  contacts:");
+                    for (PqStruct contact : contacts.structs()) {
+                        String number = contact.getString("phoneNumber");
+                        if (number == null) {
+                            missingNumbers++;
+                        }
+                        System.out.printf("    - %-16s %s%n", contact.getString("name"),
+                                number == null ? "(no number on file)" : number);
                     }
-                    System.out.printf("  - %-16s %s%n", contact.getString("name"),
-                            number == null ? "(no number on file)" : number);
                 }
             }
         }
