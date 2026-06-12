@@ -1,0 +1,149 @@
+# Nested Data
+
+Read **structs, lists, and maps** with Hardwood's Row API. A `RowReader` walks one record at a
+time and hands back lightweight views of nested fields — `getStruct`, `getList`, `getMap` — that
+you read with the same typed accessors you'd use on a flat column. Nested data ends up reading
+just like flat data, one level down.
+
+The example does three small, real tasks over three tiny bundled fixtures (no download):
+
+1. **Address book** — print each owner's phone numbers and contacts, flagging contacts with no
+   number on file.
+2. **Telemetry** — sum each device's readings through an **unboxed** primitive list view.
+3. **Settings** — resolve keys out of typed maps by looking values up by key.
+
+For the columnar counterpart — reading the same shapes through the layer model — see the sibling
+[`layer-model`](../layer-model) example.
+
+## What you'll learn
+
+- Read a `list<string>` with `getList(...)` and a `list<struct<...>>` with `getList(...).structs()`,
+  then read each `PqStruct`'s fields by name.
+- Tell an **absent** list (`getList` returns `null`) apart from an **empty** one (a real list of
+  `size() == 0`), and handle an optional leaf (`getString` returns `null`).
+- Sum a `list<long>` with `PqLongList` and its `PrimitiveIterator.OfLong` — no `Long` boxing.
+  `PqIntList` (`ints()`) and `PqDoubleList` (`doubles()`) work the same way.
+- Read a `map` as a `PqMap`: iterate `getEntries()`, or look a value up by key with the **typed**
+  overloads — the `int`-keyed map takes a primitive `int`, no boxing of the key.
+
+## The data
+
+Three tiny fixtures bundled under [`src/main/resources`](src/main/resources), each using the
+modern three-level Parquet encoding for nested types.
+
+`address_book_test.parquet` — the Dremel-paper address book (2 rows):
+
+```
+message schema {
+  required binary owner (String);
+  optional group ownerPhoneNumbers (List) {
+    repeated group list {
+      optional binary element (String);
+    }
+  }
+  optional group contacts (List) {
+    repeated group list {
+      optional group element {
+        required binary name (String);
+        optional binary phoneNumber (String);
+      }
+    }
+  }
+}
+```
+
+`primitive_lists_test.parquet` — primitive list elements (4 rows):
+
+```
+message schema {
+  required int32 id;
+  optional group int_list (List)    { repeated group list { optional int32  element; } }
+  optional group long_list (List)   { repeated group list { optional int64  element; } }
+  optional group double_list (List) { repeated group list { optional double element; } }
+}
+```
+
+`map_types_test.parquet` — typed-key maps (3 rows):
+
+```
+message schema {
+  required int32 id;
+  optional group string_map (Map) { repeated group key_value { required binary key (String); optional binary  value (String); } }
+  optional group int_map (Map)    { repeated group key_value { required int32  key;          optional int64   value;          } }
+  optional group bool_map (Map)   { repeated group key_value { required binary key (String); optional boolean value;          } }
+}
+```
+
+## Run it
+
+No setup beyond a JDK 21+. Pick either Maven or Docker.
+
+**Maven** (from this folder, using the bundled Maven wrapper):
+
+```shell
+cd nested-data
+./mvnw -q compile exec:java
+```
+
+**Docker:**
+
+```shell
+cd nested-data
+docker compose run --rm --build nested-data
+```
+
+The sample files are bundled on the classpath and read straight into memory, so the example
+works offline with nothing to download.
+
+## Expected output
+
+```
+=== Address book ===
+Julien Le Dem
+  phones: [555 123 4567, 555 666 1337]
+  - Dmitriy Ryaboy   555 987 6543
+  - Chris Aniszczyk  (no number on file)
+A. Nonymous
+  phones: (none)
+Contacts with no phone number: 1
+
+=== Telemetry ===
+  device 1: 3 readings, sum=600
+  device 2: 1 readings, sum=1000
+  device 3: 5 readings, sum=15
+  device 4: no readings
+Total across all devices: 1615
+
+=== Settings ===
+  user 1: greeting=hello, int_map[2]=200, 3 numeric setting(s)
+  user 2: greeting=(default), int_map[2]=unset, 1 numeric setting(s)
+  user 3: greeting=(default), int_map[2]=unset, 0 numeric setting(s)
+```
+
+The address book is the example from the Dremel paper: `Julien Le Dem` has two phone numbers and
+two contacts (one of which, `Chris Aniszczyk`, has no number), while `A. Nonymous` has an empty
+phone list and no contacts.
+
+## How it works
+
+[`Main.java`](src/main/java/dev/hardwood/examples/nested/Main.java) is three short methods, one per
+task. [`Datasets.java`](src/main/java/dev/hardwood/examples/nested/Datasets.java) reads the bundled
+fixtures from the classpath into an in-memory `InputFile`.
+
+- **Views are flyweights.** `getList` / `getStruct` / `getMap` return cheap views positioned on the
+  current row; read from them before the next `rows.next()`. `structs()`, `strings()`, `ints()` …
+  are likewise views over the list, not copies.
+- **Empty is not null.** An empty list is a present list with `size() == 0`; only a genuinely
+  absent value comes back `null`. The address book shows both — `A. Nonymous`'s empty phone list,
+  and (in the telemetry file) device 4's null reading list.
+- **Primitive lists skip the boxing.** `PqLongList.iterator()` is a `PrimitiveIterator.OfLong`;
+  `nextLong()` returns a primitive, so the running sum never allocates a `Long`.
+- **Map keys are typed.** `PqMap` overloads `containsKey` / `getValue` for `int`, `long`,
+  `String`, and `byte[]` keys, so an `int`-keyed map is queried with a primitive `int`.
+
+## Learn more
+
+- How-to: [Read Row by Row](https://hardwood.dev/latest/how-to/row-reader/)
+- Concept: [Nested Columns](https://hardwood.dev/latest/concepts/nested-columns/) ·
+  sibling example: [`layer-model`](../layer-model)
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>

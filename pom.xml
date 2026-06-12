@@ -31,6 +31,8 @@
         <module>metadata-explorer</module>
         <module>multi-file</module>
         <module>query-controls</module>
+        <module>nested-data</module>
+        <module>layer-model</module>
     </modules>
 
 </project>
