@@ -33,6 +33,7 @@
         <module>query-controls</module>
         <module>nested-data</module>
         <module>layer-model</module>
+        <module>typed-accessors</module>
     </modules>
 
 </project>
