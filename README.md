@@ -62,6 +62,7 @@ that. It comes from the public
 | [Multi-File](./multi-file) | Read three months of trips as one logical dataset — per-file footer counts, a single cross-file scan, and a thread pool you size yourself. | `Hardwood.openAll`, `InputFile.ofPaths`, `ParquetFileReader.isMultiFile`, `HardwoodContext`, shared pool + cross-file prefetch |
 | [Nested Data](./nested-data) | Read structs, lists, and maps with the Row API — walk an address book, sum telemetry through unboxed primitive lists, and resolve typed map keys. | `RowReader`, `getStruct`/`getList`/`getMap`, `PqStruct`, `PqList`, `PqIntList`/`PqLongList`/`PqDoubleList` (no boxing), `PqMap` typed key lookups |
 | [Layer Model](./layer-model) | Aggregate nested columns without materializing rows — count list and map items from offsets, and see a list's and map's outer group fold into one repeated layer. | `ColumnReader`, `getLayerCount`/`getLayerKind`, `getLayerOffsets`/`getLayerValidity`, `getLeafValidity`, `LayerKind` (REPEATED vs STRUCT) |
+| [Typed Accessors](./typed-accessors) | Decode Parquet's logical types to their natural Java types — dates, times, UTC vs. local timestamps, decimals, UUIDs, intervals, FLOAT16, and JSON/BSON — and recognize a column's type from the schema. | `getDate`/`getTime`/`getTimestamp`/`getLocalTimestamp`/`getDecimal`/`getUuid`/`getInterval`, `PqInterval`, `ColumnSchema.logicalType()` (JSON/BSON/FLOAT16/NULL) |
 
 <!-- New examples: add a `| [Name](./folder) | one-line description | key APIs/concepts |` row above. -->
 
