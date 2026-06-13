@@ -53,18 +53,16 @@ that. It comes from the public
 
 ## Examples
 
-| Example | Description | Concepts touched |
-| --- | --- | --- |
-| [Hello Hardwood](./hello-hardwood) | The absolute basics — open a Parquet file, inspect its schema and footer metadata, read a few rows, and sum a column. | `ParquetFileReader`, `RowReader`, `ColumnReader`, footer metadata, typed accessors, null handling |
-| [Column Analytics](./column-analytics) | Aggregate a month of trips the columnar way — project a few columns, read batches of primitive arrays, compute totals and averages null-aware. | `ColumnReaders`, `ColumnProjection`, batched primitive arrays, hoisted `Validity` null checks |
-| [Query Controls](./query-controls) | Narrow a read with pushed-down query controls — filter, project, limit, paginate, and split by byte range — so the scan touches only the rows and columns it must. | `FilterPredicate` (numeric + logical-type overloads, `in`/`inStrings`, `not`), `ColumnProjection`, `head`, `skip`, `RowGroupPredicate.byteRange`, three-valued null logic |
-| [Metadata Explorer](./metadata-explorer) | Describe a Parquet file from its footer alone — version, schema with physical/logical types, and per row group every column chunk's codec, sizes, null count, and stats. | `FileMetaData`, `FileSchema`, `RowGroup`, `ColumnChunk`, `ColumnMetaData`, `Statistics`, key-value metadata |
-| [Multi-File](./multi-file) | Read three months of trips as one logical dataset — per-file footer counts, a single cross-file scan, and a thread pool you size yourself. | `Hardwood.openAll`, `InputFile.ofPaths`, `ParquetFileReader.isMultiFile`, `HardwoodContext`, shared pool + cross-file prefetch |
-| [Nested Data](./nested-data) | Read structs, lists, and maps with the Row API — walk an address book, sum telemetry through unboxed primitive lists, and resolve typed map keys. | `RowReader`, `getStruct`/`getList`/`getMap`, `PqStruct`, `PqList`, `PqIntList`/`PqLongList`/`PqDoubleList` (no boxing), `PqMap` typed key lookups |
-| [Layer Model](./layer-model) | Aggregate nested columns without materializing rows — count list and map items from offsets, and see a list's and map's outer group fold into one repeated layer. | `ColumnReader`, `getLayerCount`/`getLayerKind`, `getLayerOffsets`/`getLayerValidity`, `getLeafValidity`, `LayerKind` (REPEATED vs STRUCT) |
-| [Typed Accessors](./typed-accessors) | Decode Parquet's logical types to their natural Java types — dates, times, UTC vs. local timestamps, decimals, UUIDs, intervals, FLOAT16, and JSON/BSON — and recognize a column's type from the schema. | `getDate`/`getTime`/`getTimestamp`/`getLocalTimestamp`/`getDecimal`/`getUuid`/`getInterval`, `PqInterval`, `ColumnSchema.logicalType()` (JSON/BSON/FLOAT16/NULL) |
-
-<!-- New examples: add a `| [Name](./folder) | one-line description | key APIs/concepts |` row above. -->
+| Example | Description |
+| --- | --- |
+| [Hello Hardwood](./hello-hardwood) | The absolute basics — open a Parquet file, inspect its schema and footer metadata, read a few rows, and sum a column.<br/>**Concepts:** `ParquetFileReader`, `RowReader`, `ColumnReader`, footer metadata, typed accessors, null handling |
+| [Column Analytics](./column-analytics) | Aggregate a month of trips the columnar way — project a few columns, read batches of primitive arrays, compute totals and averages null-aware.<br/>**Concepts:** `ColumnReaders`, `ColumnProjection`, batched primitive arrays, hoisted `Validity` null checks |
+| [Query Controls](./query-controls) | Narrow a read with pushed-down query controls — filter, project, limit, paginate, and split by byte range — so the scan touches only the rows and columns it must.<br/>**Concepts:** `FilterPredicate` (numeric + logical-type overloads, `in`/`inStrings`, `not`), `ColumnProjection`, `head`, `skip`, `RowGroupPredicate.byteRange`, three-valued null logic |
+| [Metadata Explorer](./metadata-explorer) | Describe a Parquet file from its footer alone — version, schema with physical/logical types, and per row group every column chunk's codec, sizes, null count, and stats.<br/>**Concepts:** `FileMetaData`, `FileSchema`, `RowGroup`, `ColumnChunk`, `ColumnMetaData`, `Statistics`, key-value metadata |
+| [Multi-File](./multi-file) | Read three months of trips as one logical dataset — per-file footer counts, a single cross-file scan, and a thread pool you size yourself.<br/>**Concepts:** `Hardwood.openAll`, `InputFile.ofPaths`, `ParquetFileReader.isMultiFile`, `HardwoodContext`, shared pool + cross-file prefetch |
+| [Nested Data](./nested-data) | Read structs, lists, and maps with the Row API — walk an address book, sum telemetry through unboxed primitive lists, and resolve typed map keys.<br/>**Concepts:** `RowReader`, `getStruct`/`getList`/`getMap`, `PqStruct`, `PqList`, `PqIntList`/`PqLongList`/`PqDoubleList` (no boxing), `PqMap` typed key lookups |
+| [Layer Model](./layer-model) | Aggregate nested columns without materializing rows — count list and map items from offsets, and see a list's and map's outer group fold into one repeated layer.<br/>**Concepts:** `ColumnReader`, `getLayerCount`/`getLayerKind`, `getLayerOffsets`/`getLayerValidity`, `getLeafValidity`, `LayerKind` (REPEATED vs STRUCT) |
+| [Typed Accessors](./typed-accessors) | Decode Parquet's logical types to their natural Java types — dates, times, UTC vs. local timestamps, decimals, UUIDs, intervals, FLOAT16, and JSON/BSON — and recognize a column's type from the schema.<br/>**Concepts:** `getDate`/`getTime`/`getTimestamp`/`getLocalTimestamp`/`getDecimal`/`getUuid`/`getInterval`, `PqInterval`, `ColumnSchema.logicalType()` (JSON/BSON/FLOAT16/NULL) |
 
 ## License
 
