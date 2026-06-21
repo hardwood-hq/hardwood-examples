@@ -1,0 +1,15 @@
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+#  Copyright The original authors
+#
+#  Licensed under the Apache Software License version 2.0, available at http://www.apache.org/licenses/LICENSE-2.0
+#
+
+# Run in a container:  docker compose run --rm --build variant-columns
+# The VARIANT fixture is bundled in the image (a committed classpath resource), so there is
+# nothing to download and no volume to mount.
+services:
+  variant-columns:
+    build:
+      context: .
