@@ -53,9 +53,7 @@ that. It comes from the public
 
 ## Examples
 
-Start with **Hello Hardwood**, then dip into whichever group fits what you're doing. Each example is
-a standalone project; see the [examples roadmap](https://github.com/hardwood-hq/hardwood-examples/issues/19)
-for what's planned next.
+Start with **Hello Hardwood**, then dip into whichever group fits what you're doing.
 
 ### Getting started
 
