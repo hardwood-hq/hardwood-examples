@@ -47,9 +47,11 @@ This is purely a build coordinator: each example stays a fully autonomous Maven 
 does not inherit from the aggregator, so you can still build and run any one of them in complete
 isolation from its own folder.
 
-Sample data is downloaded into the example's `data/` folder on first run and reused after
-that. It comes from the public
+Most examples download their sample data into the example's `data/` folder on first run and reuse
+it after that — it comes from the public
 [NYC TLC Yellow Taxi trip-record dataset](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page).
+Examples that need a small, purpose-built fixture instead commit it with the example, so they run
+fully offline.
 
 ## Examples
 
