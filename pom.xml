@@ -27,6 +27,7 @@
     -->
     <modules>
         <module>column-analytics</module>
+        <module>concurrent-column-consumer</module>
         <module>hello-hardwood</module>
         <module>metadata-explorer</module>
         <module>multi-file</module>
