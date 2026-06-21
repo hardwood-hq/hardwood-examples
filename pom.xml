@@ -35,6 +35,7 @@
         <module>nested-data</module>
         <module>layer-model</module>
         <module>typed-accessors</module>
+        <module>variant-columns</module>
     </modules>
 
 </project>
