@@ -1,0 +1,14 @@
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+#  Copyright The original authors
+#
+#  Licensed under the Apache Software License version 2.0, available at http://www.apache.org/licenses/LICENSE-2.0
+#
+
+# Run in a container:  docker compose run --rm --build geospatial
+# The GeoParquet fixture is committed with the example, so the run needs no data volume.
+services:
+  geospatial:
+    build:
+      context: .
