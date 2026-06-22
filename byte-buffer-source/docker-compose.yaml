@@ -1,0 +1,19 @@
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+#  Copyright The original authors
+#
+#  Licensed under the Apache Software License version 2.0, available at http://www.apache.org/licenses/LICENSE-2.0
+#
+
+# Run in a container:  docker compose run --rm --build byte-buffer-source
+# The downloaded data/ folder is kept on a volume and reused across runs.
+services:
+  byte-buffer-source:
+    build:
+      context: .
+    volumes:
+      - hardwood-data:/app/data
+
+volumes:
+  hardwood-data:
