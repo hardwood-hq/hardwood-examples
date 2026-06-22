@@ -72,6 +72,7 @@ Start with **Hello Hardwood**, then dip into whichever group fits what you're do
 | [Query Controls](./query-controls) | Narrow a read with pushed-down query controls — filter, project, limit, paginate, and split by byte range — so the scan touches only the rows and columns it must.<br/>**Concepts:** `FilterPredicate` (numeric + logical-type overloads, `in`/`inStrings`, `not`), `ColumnProjection`, `head`, `skip`, `RowGroupPredicate.byteRange`, three-valued null logic |
 | [Metadata Explorer](./metadata-explorer) | Describe a Parquet file from its footer alone — version, schema with physical/logical types, and per row group every column chunk's codec, sizes, null count, and stats.<br/>**Concepts:** `FileMetaData`, `FileSchema`, `RowGroup`, `ColumnChunk`, `ColumnMetaData`, `Statistics`, key-value metadata |
 | [Multi-File](./multi-file) | Read three months of trips as one logical dataset — per-file footer counts, a single cross-file scan, and a thread pool you size yourself.<br/>**Concepts:** `Hardwood.openAll`, `InputFile.ofPaths`, `ParquetFileReader.isMultiFile`, `HardwoodContext`, shared pool + cross-file prefetch |
+| [Byte Buffer Source](./byte-buffer-source) | Read Parquet straight from an in-memory `ByteBuffer` — the "I already have the bytes" path for an HTTP body, a blob store, or a `byte[]` — and read several in-memory blobs as one dataset.<br/>**Concepts:** `InputFile.of(ByteBuffer)`, `InputFile.ofBuffers(...)`, `ParquetFileReader.openAll`, `isMultiFile`, buffer `duplicate()` for independent cursors |
 
 ### Types & data shapes
 
