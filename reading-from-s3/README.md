@@ -4,11 +4,12 @@ Read a Parquet file straight from Amazon S3 with [Hardwood](https://hardwood.dev
 streaming only the bytes you need. The same code works against any S3-compatible store (MinIO,
 Cloudflare R2, GCS), since Hardwood speaks the S3 protocol, not an AWS-only SDK.
 
-So you can run it with **no AWS account and no internet**, this example points at a
-[MinIO](https://min.io) server running next to it in Docker. Spin it up, it seeds a bucket with the
-public NYC Yellow Taxi dataset, and the reader streams rows back over S3. Switching to real Amazon
-S3 changes only the `S3Source` configuration — see [Pointing at real AWS](#pointing-at-real-aws)
-below.
+So you can run it with **no AWS account**, this example serves the data from a throwaway S3 server
+([s3proxy](https://github.com/gaul/s3proxy)) that [Testcontainers](https://testcontainers.com)
+starts in a Docker container next to it. It seeds a bucket with the public NYC Yellow Taxi dataset,
+and the reader streams rows back over S3. Hardwood can't tell it apart from real S3 — it speaks the
+same protocol. Switching to real Amazon S3 changes only the `S3Source` configuration — see
+[Pointing at real AWS](#pointing-at-real-aws) below.
 
 ## What you'll learn
 
@@ -25,30 +26,24 @@ below.
 
 ## Run it
 
-Everything runs in Docker — MinIO, the one-time data download, bucket seeding, and the reader:
+You need a running **Docker** daemon — Testcontainers uses it to start the S3 server. Then:
 
 ```shell
 cd reading-from-s3
-docker compose up --build
+./mvnw -q compile exec:java
 ```
 
-The reader prints its output and exits. MinIO keeps running so you can re-run or browse the
-console at <http://localhost:9001> (login `minioadmin` / `minioadmin`). When you're done:
+On first run it downloads the taxi file into a local `data/` folder (reused afterwards), starts the
+S3 server, seeds it, and the reader streams rows back over S3. The server is removed when the run
+finishes.
+
+### Run it in a container
+
+You can also run the whole example in Docker. Since the reader itself launches a container, this
+mounts the Docker socket (see [`docker-compose.yaml`](docker-compose.yaml)):
 
 ```shell
-docker compose down -v
-```
-
-The taxi file is downloaded into a named volume on first run and reused after that.
-
-### Running the reader with Maven
-
-The reader is an ordinary Maven project; only the MinIO infrastructure needs Docker. Start that
-in the background, then run the app on your host (it defaults to `http://localhost:9000`):
-
-```shell
-docker compose up -d minio downloader seed   # bring up + seed MinIO
-./mvnw -q compile exec:java                   # run the reader against it
+docker compose run --rm --build reading-from-s3
 ```
 
 ## Expected output
@@ -79,21 +74,19 @@ The seed step uploads the same month under two keys, so the bucket holds two obj
 [`Main.java`](src/main/java/dev/hardwood/examples/s3/Main.java) is short and linear — start there.
 
 - **One `S3Source`, reused.** It holds the endpoint, credentials, and a shared HTTP client. Build
-  it once and open every object through it so connections and credentials are reused. MinIO needs
-  **path-style** addressing (`{endpoint}/{bucket}/{key}`) rather than the virtual-hosted style AWS
-  uses by default, so the builder sets `pathStyle(true)`.
+  it once and open every object through it so connections and credentials are reused. s3proxy (like
+  most non-AWS services) needs **path-style** addressing (`{endpoint}/{bucket}/{key}`) rather than
+  the virtual-hosted style AWS uses by default, so the builder sets `pathStyle(true)`.
 - **An S3 object reads like a local file.** `source.inputFile(...)` returns an `S3InputFile` that
   implements the same `InputFile` interface as a local path. Everything downstream — the footer,
   the schema, the `RowReader` — is identical to the [Hello Hardwood](../hello-hardwood) example.
 - **Range reads, not downloads.** Each read issues a signed HTTP GET with a byte-range header, so
   only the requested bytes move. Projecting two columns and stopping after five rows transfers a
   sliver of the object; the counters on `S3InputFile` report exactly how much.
-- **Connection details come from the environment.** `S3_ENDPOINT`, `S3_ACCESS_KEY`, etc. default
-  to the local MinIO, so the same build runs unchanged inside the Docker network
-  (`http://minio:9000`) and from your host (`http://localhost:9000`).
-- **Seeding is plain `mc`.** [`docker-compose.yaml`](docker-compose.yaml) downloads the dataset
-  with `curl`, then uses the MinIO client (`mc`) to create the bucket and upload it. Hardwood is a
-  reader, so writing the data into S3 is the job of separate tooling, not the example.
+- **The S3 server is throwaway infrastructure.** [`S3Proxy.java`](src/main/java/dev/hardwood/examples/s3/S3Proxy.java)
+  runs the s3proxy image via Testcontainers and seeds the bucket by copying the dataset in before
+  startup. It exists only so the example has something to read from — it is *not* code you'd write
+  in an app, where the data already lives in S3. Hardwood is a reader, so seeding is separate tooling.
 
 ## Pointing at real AWS
 

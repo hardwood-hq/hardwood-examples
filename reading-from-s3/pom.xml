@@ -23,6 +23,7 @@
         <maven.compiler.release>21</maven.compiler.release>
 
         <version.hardwood>1.0.0.CR2</version.hardwood>
+        <version.testcontainers>1.21.4</version.testcontainers>
         <version.exec.plugin>3.5.0</version.exec.plugin>
         <version.license.plugin>5.0.0</version.license.plugin>
         <exec.mainClass>dev.hardwood.examples.s3.Main</exec.mainClass>
@@ -35,6 +36,16 @@
                 <groupId>dev.hardwood</groupId>
                 <artifactId>hardwood-bom</artifactId>
                 <version>${version.hardwood}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Manages the Testcontainers modules. The example uses Testcontainers only to run a
+                 throwaway S3 server (an s3proxy image) for the reader to talk to. -->
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${version.testcontainers}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -61,6 +72,24 @@
             <artifactId>zstd-jni</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- Demo infrastructure only: runs a throwaway S3-compatible server (an s3proxy image) in a
+             Docker container so the example has something to read from. This is the stand-in for
+             Amazon S3; the Hardwood reading code is what you'd actually write in an app. -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+        </dependency>
+
+        <!-- Testcontainers logs through SLF4J; bind to a no-op so the demo's own stdout is the only
+             output. Without a binding SLF4J prints a startup warning instead. Version tracks the
+             slf4j-api Testcontainers pulls in, so the binding is found. -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.36</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -72,6 +101,11 @@
                 <version>${version.exec.plugin}</version>
                 <configuration>
                     <mainClass>${exec.mainClass}</mainClass>
+                    <!-- Testcontainers leaves daemon threads (its container reaper, the Docker
+                         client) running after main returns. Don't let the plugin interrupt and join
+                         them on shutdown — that surfaces a spurious InterruptedException once the
+                         work is already done. They're daemons, so the JVM exits cleanly regardless. -->
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
                 </configuration>
             </plugin>
 

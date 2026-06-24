@@ -16,12 +16,14 @@ import dev.hardwood.s3.S3Source;
 import dev.hardwood.schema.ColumnProjection;
 import dev.hardwood.schema.FileSchema;
 
+import java.nio.file.Path;
+
 /// Read Parquet straight from Amazon S3 — no local copy, streaming only the bytes you need.
 ///
-/// The same code works against any S3-compatible store; here it points at a [MinIO](https://min.io)
-/// server running next to it in Docker so the whole thing runs offline, with no AWS account.
-/// Switching to real Amazon S3 changes only the `S3Source` configuration — see the README's
-/// "Pointing at real AWS" section.
+/// So it runs offline with no AWS account, this example serves the data from a throwaway S3 server
+/// ([S3Proxy]) that Testcontainers starts in a Docker container next to it. The reader is none the
+/// wiser — it speaks the same S3 protocol it would to real Amazon S3. Switching to real AWS changes
+/// only the `S3Source` configuration — see the README's "Pointing at real AWS" section.
 ///
 /// `S3Source`: https://hardwood.dev/api/1.0.0.CR2/dev/hardwood/s3/S3Source.html
 ///
@@ -36,29 +38,36 @@ import dev.hardwood.schema.FileSchema;
 /// Reference: https://hardwood.dev/latest/reference/s3/
 public final class Main {
 
+    private static final String REGION = "us-east-1";
+    private static final String ACCESS_KEY = "access";
+    private static final String SECRET_KEY = "secret";
+    private static final String BUCKET = "taxi";
+    private static final String KEY = "yellow_tripdata_2026-01.parquet";
+
     public static void main(String[] args) throws Exception {
-        // Connection details come from the environment so the same build runs both inside the
-        // Docker network (endpoint "http://minio:9000") and from your host ("http://localhost:9000").
-        String endpoint = env("S3_ENDPOINT", "http://localhost:9000");
-        String region = env("S3_REGION", "us-east-1");
-        String accessKey = env("S3_ACCESS_KEY", "minioadmin");
-        String secretKey = env("S3_SECRET_KEY", "minioadmin");
-        String bucket = env("S3_BUCKET", "taxi");
-        String key = env("S3_KEY", "yellow_tripdata_2026-01.parquet");
+        Path file = Datasets.yellowTaxi();
 
-        // An S3Source holds the endpoint, credentials, and a shared HTTP client. Build it once and
-        // reuse it for every object you open — that reuses connections and credentials. MinIO (and
-        // most non-AWS services) need path-style addressing: "{endpoint}/{bucket}/{key}" rather than
-        // the virtual-hosted "{bucket}.{endpoint}/{key}" that AWS uses by default.
-        try (S3Source source = S3Source.builder()
-                .endpoint(endpoint)
-                .region(region)
-                .pathStyle(true)
-                .credentials(S3Credentials.of(accessKey, secretKey))
-                .build()) {
+        // Stand up a local S3 server holding the dataset under two keys (a plain one and a "-copy"),
+        // so the multi-file part of the example has more than one object to stitch together.
+        String copyKey = KEY.replace(".parquet", "-copy.parquet");
+        System.out.println("Starting a local S3 server (Docker)...");
+        try (S3Proxy s3 = S3Proxy.start(ACCESS_KEY, SECRET_KEY, BUCKET, file, KEY, copyKey)) {
 
-            readOneObject(source, bucket, key);
-            readWholeBucket(source, bucket, key);
+            // An S3Source holds the endpoint, credentials, and a shared HTTP client. Build it once
+            // and reuse it for every object you open — that reuses connections and credentials.
+            // s3proxy (like most non-AWS services) needs path-style addressing:
+            // "{endpoint}/{bucket}/{key}" rather than the virtual-hosted "{bucket}.{endpoint}/{key}"
+            // that AWS uses by default.
+            try (S3Source source = S3Source.builder()
+                    .endpoint(s3.endpoint())
+                    .region(REGION)
+                    .pathStyle(true)
+                    .credentials(S3Credentials.of(ACCESS_KEY, SECRET_KEY))
+                    .build()) {
+
+                readOneObject(source, BUCKET, KEY);
+                readWholeBucket(source, BUCKET, KEY);
+            }
         }
     }
 
@@ -124,11 +133,5 @@ public final class Main {
             }
             System.out.printf("Scanned %,d rows across 2 objects.%n", count);
         }
-    }
-
-    /// Reads an environment variable, falling back to a default when it is unset or blank.
-    private static String env(String name, String fallback) {
-        String value = System.getenv(name);
-        return (value == null || value.isBlank()) ? fallback : value;
     }
 }
