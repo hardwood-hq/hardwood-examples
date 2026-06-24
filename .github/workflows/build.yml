@@ -71,6 +71,25 @@ jobs:
           path: ${{ matrix.example }}/data
           key: data-${{ matrix.example }}-${{ hashFiles(format('{0}/**/Datasets.java', matrix.example)) }}
 
+      # Some examples need a running service to talk to — reading-from-s3, for one, reads over the
+      # S3 protocol from a MinIO server. Their docker-compose.yaml carries that infrastructure
+      # alongside the reader. Bring up every compose service except the one named after the example
+      # itself: that service is the reader, which we run on the host in the next step. Examples whose
+      # only service is the app (the common case) have nothing extra to start and skip this.
+      - name: Start example infrastructure
+        working-directory: ${{ matrix.example }}
+        run: |
+          if [ -f docker-compose.yaml ]; then
+            infra=$(docker compose config --services | grep -vx '${{ matrix.example }}' || true)
+            if [ -n "$infra" ]; then
+              echo "Starting infrastructure services: $infra"
+              # --wait blocks until each service is healthy or (for the one-shot download/seed jobs)
+              # has exited 0, so the reader below never races an unseeded bucket. Bound it so a stall
+              # fails this step clearly instead of hanging until the job-level timeout.
+              docker compose up -d --wait --wait-timeout 420 $infra
+            fi
+          fi
+
       - name: Build and run
         working-directory: ${{ matrix.example }}
         run: ./mvnw -B -q compile exec:java
