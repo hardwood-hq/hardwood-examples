@@ -10,8 +10,8 @@ so all you do to see it work is **run its `Main` class**.
 ## Prerequisites
 
 - **JDK 21 or newer**. That's it for the Maven path (the bundled `./mvnw` fetches Maven).
-- *(Optional)* **Docker**, only for examples that need infrastructure (e.g. S3 via MinIO)
-  or if you prefer running an example in a container.
+- *(Optional)* **Docker**, only for examples that need it (e.g. the S3 example starts a
+  containerized S3 server) or if you prefer running an example in a container.
 
 ## How to run any example
 
@@ -64,6 +64,7 @@ fully offline.
 | [Layer Model](./layer-model) | The repeated/struct layer model — aggregate nested data from its offsets and validity, without materializing row objects. |
 | [Variant Columns](./variant-columns) | Semi-structured data — decode flexible, JSON-like VARIANT values, whatever shape they take. |
 | [Geospatial](./geospatial) | Reading geospatial columns — recognize a GEOMETRY column, read its points, and push a bounding-box filter down to skip row groups that can't intersect the query. |
+| [Reading from S3](./reading-from-s3) | Read Parquet straight from Amazon S3 (or any S3-compatible store) — configure an `S3Source`, fetch byte ranges instead of whole objects, and open a whole bucket as one dataset. Runs offline against a containerized S3 server (needs Docker). |
 
 ## License
 

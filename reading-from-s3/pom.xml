@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+     SPDX-License-Identifier: Apache-2.0
+
+     Copyright The original authors
+
+     Licensed under the Apache Software License version 2.0, available at http://www.apache.org/licenses/LICENSE-2.0
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>dev.hardwood.examples</groupId>
+    <artifactId>reading-from-s3</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>Reading from S3</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <version.hardwood>1.0.0.CR2</version.hardwood>
+        <version.testcontainers>1.21.4</version.testcontainers>
+        <version.exec.plugin>3.5.0</version.exec.plugin>
+        <version.license.plugin>5.0.0</version.license.plugin>
+        <exec.mainClass>dev.hardwood.examples.s3.Main</exec.mainClass>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Manages versions for all hardwood-* modules and their optional codecs. -->
+            <dependency>
+                <groupId>dev.hardwood</groupId>
+                <artifactId>hardwood-bom</artifactId>
+                <version>${version.hardwood}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Manages the Testcontainers modules. The example uses Testcontainers only to run a
+                 throwaway S3 server (an s3proxy image) for the reader to talk to. -->
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${version.testcontainers}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- The Hardwood reader (version from the BOM above). -->
+        <dependency>
+            <groupId>dev.hardwood</groupId>
+            <artifactId>hardwood-core</artifactId>
+        </dependency>
+
+        <!-- S3 support: S3Source, S3InputFile, S3Credentials. Reads Parquet straight from
+             Amazon S3 or any S3-compatible service (here, MinIO) over range requests. -->
+        <dependency>
+            <groupId>dev.hardwood</groupId>
+            <artifactId>hardwood-s3</artifactId>
+        </dependency>
+
+        <!-- The taxi files are ZSTD-compressed; this codec is an optional runtime dep. -->
+        <dependency>
+            <groupId>com.github.luben</groupId>
+            <artifactId>zstd-jni</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Demo infrastructure only: runs a throwaway S3-compatible server (an s3proxy image) in a
+             Docker container so the example has something to read from. This is the stand-in for
+             Amazon S3; the Hardwood reading code is what you'd actually write in an app. -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+        </dependency>
+
+        <!-- Testcontainers logs through SLF4J; bind to a no-op so the demo's own stdout is the only
+             output. Without a binding SLF4J prints a startup warning instead. Version tracks the
+             slf4j-api Testcontainers pulls in, so the binding is found. -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.36</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- `./mvnw compile exec:java` runs ${exec.mainClass}. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${version.exec.plugin}</version>
+                <configuration>
+                    <mainClass>${exec.mainClass}</mainClass>
+                    <!-- Testcontainers leaves daemon threads (its container reaper, the Docker
+                         client) running after main returns. Don't let the plugin interrupt and join
+                         them on shutdown — that surfaces a spurious InterruptedException once the
+                         work is already done. They're daemons, so the JVM exits cleanly regardless. -->
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                </configuration>
+            </plugin>
+
+            <!-- Fail the build if a source file is missing the Apache license header.
+                 The check binds to process-sources, so `./mvnw compile` runs it too. -->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>${version.license.plugin}</version>
+                <configuration>
+                    <strictCheck>true</strictCheck>
+                    <licenseSets>
+                        <licenseSet>
+                            <header>etc/license.txt</header>
+                            <includes>
+                                <include>src/**</include>
+                                <include>pom.xml</include>
+                                <include>Dockerfile</include>
+                                <include>docker-compose.yaml</include>
+                            </includes>
+                        </licenseSet>
+                    </licenseSets>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                        <Dockerfile>SCRIPT_STYLE</Dockerfile>
+                    </mapping>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

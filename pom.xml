@@ -34,6 +34,7 @@
         <module>metadata-explorer</module>
         <module>multi-file</module>
         <module>query-controls</module>
+        <module>reading-from-s3</module>
         <module>nested-data</module>
         <module>layer-model</module>
         <module>typed-accessors</module>

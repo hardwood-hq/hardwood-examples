@@ -1,0 +1,30 @@
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+#  Copyright The original authors
+#
+#  Licensed under the Apache Software License version 2.0, available at http://www.apache.org/licenses/LICENSE-2.0
+#
+
+# Run in a container:  docker compose run --rm --build reading-from-s3
+#
+# The reader uses Testcontainers to start its S3 server (the s3proxy image) on your Docker daemon.
+# So it works from inside this container, we mount the daemon socket and tell Testcontainers how to
+# reach the sibling container's published port from here (host.docker.internal). The downloaded
+# data/ folder is kept on a volume and reused across runs.
+services:
+  reading-from-s3:
+    build:
+      context: .
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - hardwood-data:/app/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      # The s3proxy container's port is published on the Docker host, not in this container; reach
+      # it via host.docker.internal so the reader connects to the right place.
+      TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
+
+volumes:
+  hardwood-data:
