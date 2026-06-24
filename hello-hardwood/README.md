@@ -80,6 +80,6 @@ downloads the sample file.
 
 - Tutorial: [Your first read](https://hardwood.dev/latest/tutorial/first-read/)
 - [Getting Started](https://hardwood.dev/latest/getting-started/) ·
-  [Row-Oriented Reading](https://hardwood.dev/latest/usage/row-reader/) ·
-  [File Metadata](https://hardwood.dev/latest/usage/metadata/)
+  [Row-Oriented Reading](https://hardwood.dev/latest/how-to/row-reader/) ·
+  [File Metadata](https://hardwood.dev/latest/how-to/metadata/)
 - API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
