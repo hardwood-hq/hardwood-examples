@@ -1,0 +1,93 @@
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+#  Copyright The original authors
+#
+#  Licensed under the Apache Software License version 2.0, available at http://www.apache.org/licenses/LICENSE-2.0
+#
+
+# Run the whole thing — MinIO, seeding, and the reader — in one command:
+#   docker compose up --build
+#
+# The app exits when it finishes reading; MinIO keeps running so you can re-run or browse the
+# console at http://localhost:9001 (login minioadmin / minioadmin). Tear it all down with:
+#   docker compose down -v
+#
+# Everything runs locally and offline: no AWS account, no cloud. The taxi dataset is downloaded
+# once into a named volume and reused across runs.
+services:
+
+  # The S3-compatible object store the example reads from. Stands in for Amazon S3.
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"   # S3 API — what the reader and the host-side Maven run connect to
+      - "9001:9001"   # web console, handy for poking around
+    volumes:
+      - minio-data:/data
+
+  # One-shot: fetch the sample Parquet into a shared volume (skipped if already there).
+  # `minio/mc` has no download tool, so a tiny curl container handles this step.
+  downloader:
+    image: curlimages/curl:latest
+    user: root   # so it can write the dataset into the shared named volume
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        f=/data/yellow_tripdata_2026-01.parquet
+        if [ -f "$$f" ]; then
+          echo "dataset already present, skipping download"
+        else
+          echo "downloading taxi dataset..."
+          curl -fSL --retry 3 -o "$$f" \
+            https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-01.parquet
+        fi
+    volumes:
+      - taxi-data:/data
+
+  # One-shot: wait for MinIO, create the bucket, and upload the dataset. It uploads the same
+  # month under two keys so the multi-file part of the example has more than one object to read.
+  seed:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_started
+      downloader:
+        condition: service_completed_successfully
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        until mc alias set local http://minio:9000 minioadmin minioadmin; do
+          echo "waiting for minio..."; sleep 1
+        done
+        mc mb --ignore-existing local/taxi
+        mc cp /data/yellow_tripdata_2026-01.parquet local/taxi/yellow_tripdata_2026-01.parquet
+        mc cp /data/yellow_tripdata_2026-01.parquet local/taxi/yellow_tripdata_2026-01-copy.parquet
+        echo "bucket seeded."
+    volumes:
+      - taxi-data:/data
+
+  # The example itself. Builds the Maven project and reads from MinIO over the S3 protocol.
+  reading-from-s3:
+    build:
+      context: .
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    environment:
+      S3_ENDPOINT: http://minio:9000
+      S3_REGION: us-east-1
+      S3_ACCESS_KEY: minioadmin
+      S3_SECRET_KEY: minioadmin
+      S3_BUCKET: taxi
+      S3_KEY: yellow_tripdata_2026-01.parquet
+
+volumes:
+  minio-data:   # MinIO's object storage
+  taxi-data:    # the downloaded sample file, shared between downloader and seed
