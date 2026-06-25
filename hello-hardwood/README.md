@@ -82,4 +82,4 @@ downloads the sample file.
 - [Getting Started](https://hardwood.dev/latest/getting-started/) ·
   [Row-Oriented Reading](https://hardwood.dev/latest/how-to/row-reader/) ·
   [File Metadata](https://hardwood.dev/latest/how-to/metadata/)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>

@@ -94,4 +94,4 @@ downloads the three monthly files.
 
 - [Read Multiple Files as One Dataset](https://hardwood.dev/latest/how-to/multi-file/)
 - Tutorial: [Your first read](https://hardwood.dev/latest/tutorial/first-read/)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>

@@ -180,4 +180,4 @@ fixtures from the classpath into an in-memory `InputFile`.
 - How-to: [Read Row by Row](https://hardwood.dev/latest/how-to/row-reader/)
 - Concept: [Nested Columns](https://hardwood.dev/latest/concepts/nested-columns/) ·
   sibling example: [`layer-model`](../layer-model)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>

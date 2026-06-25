@@ -163,4 +163,4 @@ fixtures from the classpath into an in-memory `InputFile`.
 - How-to: [Read Column by Column](https://hardwood.dev/latest/how-to/column-reader/)
 - Concept: [Nested Columns](https://hardwood.dev/latest/concepts/nested-columns/) ·
   sibling example: [`nested-data`](../nested-data)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>

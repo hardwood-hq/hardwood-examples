@@ -25,7 +25,7 @@ import java.nio.file.Path;
 /// wiser — it speaks the same S3 protocol it would to real Amazon S3. Switching to real AWS changes
 /// only the `S3Source` configuration — see the README's "Pointing at real AWS" section.
 ///
-/// `S3Source`: https://hardwood.dev/api/1.0.0.CR2/dev/hardwood/s3/S3Source.html
+/// `S3Source`: https://hardwood.dev/api/1.0.0.Final/dev/hardwood/s3/S3Source.html
 ///
 /// What it shows:
 ///   1. Build an `S3Source` for an S3-compatible endpoint (endpoint, path-style, credentials).

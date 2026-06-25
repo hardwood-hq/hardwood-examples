@@ -100,4 +100,4 @@ per row group so the bounding-box pushdown has something to skip.
 - How-to: [Filter, Project, Limit, and Split](https://hardwood.dev/latest/how-to/query-controls/) ·
   [File Metadata](https://hardwood.dev/latest/how-to/metadata/)
 - Parquet format: [Geospatial definitions](https://github.com/apache/parquet-format/blob/master/Geospatial.md)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>

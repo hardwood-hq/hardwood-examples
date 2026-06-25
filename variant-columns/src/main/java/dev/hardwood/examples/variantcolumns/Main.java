@@ -36,7 +36,7 @@ import dev.hardwood.row.PqVariantObject;
 ///
 /// Follows the "Read Variant Columns" guide:
 ///   https://hardwood.dev/latest/how-to/variant/
-/// API reference: https://hardwood.dev/api/1.0.0.CR2/
+/// API reference: https://hardwood.dev/api/1.0.0.Final/
 public final class Main {
 
     /// The gallery, in printing order. Each fixture holds a single row with one `var` VARIANT value.

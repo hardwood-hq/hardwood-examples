@@ -25,7 +25,7 @@ import dev.hardwood.schema.ColumnProjection;
 ///
 /// Follows the "Column-Oriented Reading" guide:
 ///   https://hardwood.dev/latest/how-to/column-reader/
-/// API reference: https://hardwood.dev/api/1.0.0.CR2/
+/// API reference: https://hardwood.dev/api/1.0.0.Final/
 ///
 /// Contrast with the row API: the equivalent `RowReader` loop would call `getLong`/`getDouble`
 /// once per column per row (~3.7M rows x 5 columns ≈ 18M virtual calls). Here each `nextBatch()`
