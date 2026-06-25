@@ -98,6 +98,6 @@ The taxi data is downloaded into a local `data/` folder on first run and reused 
 - [Avro integration](https://hardwood.dev/latest/how-to/avro/) ·
   [Query controls](https://hardwood.dev/latest/how-to/query-controls/)
 - API reference (Javadoc):
-  [`AvroReaders`](https://hardwood.dev/api/1.0.0.CR2/dev/hardwood/avro/AvroReaders.html) ·
-  [`AvroRowReader`](https://hardwood.dev/api/1.0.0.CR2/dev/hardwood/avro/AvroRowReader.html)
+  [`AvroReaders`](https://hardwood.dev/api/1.0.0.Final/dev/hardwood/avro/AvroReaders.html) ·
+  [`AvroRowReader`](https://hardwood.dev/api/1.0.0.Final/dev/hardwood/avro/AvroRowReader.html)
 - [Apache Avro documentation](https://avro.apache.org/docs/)

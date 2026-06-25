@@ -27,7 +27,7 @@ import dev.hardwood.schema.ColumnProjection;
 /// `GenericRecord`, so code already written against Avro can read Parquet unchanged. The same
 /// projection, filter, and head/tail controls as the native reader are available on the Avro reader.
 ///
-/// `AvroReaders`: https://hardwood.dev/api/1.0.0.CR2/dev/hardwood/avro/AvroReaders.html
+/// `AvroReaders`: https://hardwood.dev/api/1.0.0.Final/dev/hardwood/avro/AvroReaders.html
 /// How-to: https://hardwood.dev/latest/how-to/avro/
 public final class Main {
 
