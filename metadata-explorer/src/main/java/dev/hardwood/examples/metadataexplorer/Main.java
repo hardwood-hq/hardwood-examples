@@ -36,7 +36,7 @@ import dev.hardwood.schema.FileSchema;
 ///
 /// Follow the "Inspect File Metadata" guide:
 ///   https://hardwood.dev/latest/how-to/metadata/
-/// API reference: https://hardwood.dev/api/1.0.0.CR2/
+/// API reference: https://hardwood.dev/api/1.0.0.Final/
 public final class Main {
 
     public static void main(String[] args) throws Exception {

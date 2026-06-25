@@ -112,4 +112,4 @@ sample file.
 
 - How-to: [Parquet-java compatibility](https://hardwood.dev/latest/how-to/compat/)
 - Concept: [Compatibility philosophy](https://hardwood.dev/latest/concepts/compatibility-philosophy/)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>

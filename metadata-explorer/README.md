@@ -124,4 +124,4 @@ downloads the sample file.
 - [Inspect File Metadata](https://hardwood.dev/latest/how-to/metadata/) ·
   [How a Parquet File Is Laid Out](https://hardwood.dev/latest/concepts/parquet-layout/)
 - Tutorial: [Your first read](https://hardwood.dev/latest/tutorial/first-read/)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>

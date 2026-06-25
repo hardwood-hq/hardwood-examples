@@ -116,4 +116,4 @@ loads the bundled fixtures into memory.
 - How-to: [Read row by row](https://hardwood.dev/latest/how-to/row-reader/)
 - Reference: [Typed accessors](https://hardwood.dev/latest/reference/accessors/)
 - Concept: [Timestamp semantics](https://hardwood.dev/latest/concepts/timestamps/)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>

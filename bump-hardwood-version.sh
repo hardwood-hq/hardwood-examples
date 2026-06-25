@@ -81,9 +81,31 @@ echo
 echo "Updated files:"
 git diff --name-only -- "${FILES[@]}" | sed 's/^/  ~ /'
 
+# hardwood-parquet-java-compat is the one module not yet on Maven Central, so the
+# verifying compile below cannot resolve it from a remote. Its example ships a
+# build-compat.sh that clones Hardwood at the matching tag and installs the module into
+# ~/.m2. Run it here — now that the pom carries ${NEW_VERSION} it builds that exact
+# version — so compat lands locally before the compile that needs it. Drop this block
+# once the module ships on Central and build-compat.sh is deleted.
+COMPAT_BUILD="parquet-java-compat/build-compat.sh"
+if [[ -x "$COMPAT_BUILD" ]]; then
+    echo
+    echo "Installing hardwood-parquet-java-compat ${NEW_VERSION} into ~/.m2: ${COMPAT_BUILD}"
+    if ! "$COMPAT_BUILD"; then
+        echo >&2
+        echo "error: building compat ${NEW_VERSION} from source failed; reverting the version edits (git checkout)." >&2
+        git checkout -- "${FILES[@]}"
+        exit 1
+    fi
+fi
+
 echo
-echo "Verifying the tree still compiles: ./mvnw -q compile"
-if ! ./mvnw -q compile; then
+# `-U` forces Maven to re-check the remote repositories, re-attempting resolutions that a
+# previous run cached as failures. Without it, a version freshly published to Central but
+# requested locally before the sync completed stays "absent" until the daily update
+# interval elapses — so a real, released version would be reported as a build failure.
+echo "Verifying the tree still compiles: ./mvnw -U -q compile"
+if ! ./mvnw -U -q compile; then
     echo >&2
     echo "error: build failed at ${NEW_VERSION}; reverting the version edits (git checkout)." >&2
     git checkout -- "${FILES[@]}"

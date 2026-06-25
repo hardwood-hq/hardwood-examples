@@ -32,7 +32,7 @@ import dev.hardwood.schema.ColumnProjection;
 /// count, and a wide all-column scan repeated across thread-pool sizes to show how [HardwoodContext]
 /// concurrency translates into read throughput.
 ///
-/// API reference: https://hardwood.dev/api/1.0.0.CR2/
+/// API reference: https://hardwood.dev/api/1.0.0.Final/
 public final class Main {
 
     /// Counting rows needs to touch only one column; everything else stays off disk.

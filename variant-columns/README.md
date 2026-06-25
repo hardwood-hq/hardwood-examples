@@ -117,4 +117,4 @@ reader code never has to care.
 - [Read Variant Columns](https://hardwood.dev/latest/how-to/variant/)
 - Tutorial: [Your first read](https://hardwood.dev/latest/tutorial/first-read/)
 - [Variant binary encoding spec](https://github.com/apache/parquet-format/blob/master/VariantEncoding.md)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>

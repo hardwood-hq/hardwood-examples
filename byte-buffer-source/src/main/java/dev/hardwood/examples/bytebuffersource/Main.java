@@ -30,7 +30,7 @@ import dev.hardwood.schema.FileSchema;
 /// (Native HTTP(S) reading is not yet available upstream, so loading the bytes yourself into a
 /// `ByteBuffer` is today's way to read remote Parquet.)
 ///
-/// API reference: https://hardwood.dev/api/1.0.0.CR2/
+/// API reference: https://hardwood.dev/api/1.0.0.Final/
 public final class Main {
 
     public static void main(String[] args) throws Exception {

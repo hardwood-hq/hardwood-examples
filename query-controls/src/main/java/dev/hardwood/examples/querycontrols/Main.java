@@ -34,7 +34,7 @@ import dev.hardwood.schema.ColumnProjection;
 ///
 /// Follows the "Filter, Project, Limit, and Split" guide:
 ///   https://hardwood.dev/latest/how-to/query-controls/
-/// API reference: https://hardwood.dev/api/1.0.0.CR2/
+/// API reference: https://hardwood.dev/api/1.0.0.Final/
 public final class Main {
 
     /// The columns the first query reads back. Everything else in the file is never decoded.

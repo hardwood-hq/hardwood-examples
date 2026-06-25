@@ -87,4 +87,4 @@ sample file.
 - [Configuration reference](https://hardwood.dev/latest/reference/configuration/) ·
   [Package structure](https://hardwood.dev/latest/reference/packages/)
 - Tutorial: [Your first read](https://hardwood.dev/latest/tutorial/first-read/)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>

@@ -42,7 +42,7 @@ import dev.hardwood.schema.FileSchema;
 ///
 /// Follows the "Read Geospatial Columns" guide:
 ///   https://hardwood.dev/latest/how-to/geospatial/
-/// API reference: https://hardwood.dev/api/1.0.0.CR2/
+/// API reference: https://hardwood.dev/api/1.0.0.Final/
 public final class Main {
 
     /// A small fixture of world-city point locations — see the README for its provenance.

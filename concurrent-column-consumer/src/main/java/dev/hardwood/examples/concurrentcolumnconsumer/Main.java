@@ -45,7 +45,7 @@ import dev.hardwood.schema.ColumnProjection;
 ///   https://hardwood.dev/latest/how-to/column-reader/
 /// Concept — RowReader vs. ColumnReader:
 ///   https://hardwood.dev/latest/concepts/reader-models/
-/// API reference: https://hardwood.dev/api/1.0.0.CR2/
+/// API reference: https://hardwood.dev/api/1.0.0.Final/
 public final class Main {
 
     /// The two columns we score. Everything else in the file is never read off disk.

@@ -13,7 +13,7 @@ same protocol. Switching to real Amazon S3 changes only the `S3Source` configura
 
 ## What you'll learn
 
-- Build an [`S3Source`](https://hardwood.dev/api/1.0.0.CR2/dev/hardwood/s3/S3Source.html) for any
+- Build an [`S3Source`](https://hardwood.dev/api/1.0.0.Final/dev/hardwood/s3/S3Source.html) for any
   S3-compatible endpoint — `endpoint`, `pathStyle`, `region`, and credentials via
   `S3Credentials.of(...)`.
 - Open an object with `source.inputFile("s3://bucket/key")` and read it with the **exact same**
@@ -122,4 +122,4 @@ See the [S3 reference](https://hardwood.dev/latest/reference/s3/) for the full l
 - [Reading multiple files](https://hardwood.dev/latest/how-to/multi-file/) ·
   [Query controls](https://hardwood.dev/latest/how-to/query-controls/)
 - [Getting Started](https://hardwood.dev/latest/getting-started/)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>

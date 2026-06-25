@@ -137,4 +137,4 @@ downloads the sample file.
 - [Filter, Project, Limit, and Split](https://hardwood.dev/latest/how-to/query-controls/) ·
   [Row Selection](https://hardwood.dev/latest/concepts/row-selection/)
 - Tutorial: [Your first read](https://hardwood.dev/latest/tutorial/first-read/)
-- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.CR2/>
+- API reference (Javadoc): <https://hardwood.dev/api/1.0.0.Final/>
