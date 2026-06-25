@@ -20,3 +20,6 @@ Thumbs.db
 
 # Downloaded sample data
 data/
+
+# Locally-built Hardwood source (parquet-java-compat/build-compat.sh)
+.hardwood-src/

@@ -65,6 +65,7 @@ fully offline.
 | [Variant Columns](./variant-columns) | Semi-structured data — decode flexible, JSON-like VARIANT values, whatever shape they take. |
 | [Geospatial](./geospatial) | Reading geospatial columns — recognize a GEOMETRY column, read its points, and push a bounding-box filter down to skip row groups that can't intersect the query. |
 | [Reading from S3](./reading-from-s3) | Read Parquet straight from Amazon S3 (or any S3-compatible store) — configure an `S3Source`, fetch byte ranges instead of whole objects, and open a whole bucket as one dataset. Runs offline against a containerized S3 server (needs Docker). |
+| [Parquet-Java Compatibility](./parquet-java-compat) | Run unmodified Apache parquet-java code (`ParquetReader<Group>`, `FilterApi`) on Hardwood — every `org.apache.parquet.*` type is a drop-in shim, so existing code switches engines by changing one dependency. |
 
 ## License
 
