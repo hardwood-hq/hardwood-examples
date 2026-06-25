@@ -26,6 +26,7 @@
         Adding a new example? Add its directory as a <module> below (keep the list sorted).
     -->
     <modules>
+        <module>avro-integration</module>
         <module>byte-buffer-source</module>
         <module>column-analytics</module>
         <module>concurrent-column-consumer</module>
