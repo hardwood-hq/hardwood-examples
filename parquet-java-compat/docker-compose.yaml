@@ -1,0 +1,24 @@
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+#  Copyright The original authors
+#
+#  Licensed under the Apache Software License version 2.0, available at http://www.apache.org/licenses/LICENSE-2.0
+#
+
+# Run in a container:  docker compose run --rm --build parquet-java-compat
+# Run ./build-compat.sh on the host first — the compat module is not published yet, so the
+# container reuses the copy it installed into your host Maven repository.
+# The downloaded data/ folder is kept on a volume and reused across runs.
+services:
+  parquet-java-compat:
+    build:
+      context: .
+    volumes:
+      - hardwood-data:/app/data
+      # Expose the locally built Hardwood artifacts (compat module and its siblings) to the
+      # container's Maven repository, read-only. Everything else resolves from Maven Central.
+      - ${HOME}/.m2/repository/dev/hardwood:/root/.m2/repository/dev/hardwood:ro
+
+volumes:
+  hardwood-data:

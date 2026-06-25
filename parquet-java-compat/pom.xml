@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+     SPDX-License-Identifier: Apache-2.0
+
+     Copyright The original authors
+
+     Licensed under the Apache Software License version 2.0, available at http://www.apache.org/licenses/LICENSE-2.0
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>dev.hardwood.examples</groupId>
+    <artifactId>parquet-java-compat</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>Parquet-Java Compatibility</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <version.hardwood>1.0.0.CR2</version.hardwood>
+        <version.exec.plugin>3.5.0</version.exec.plugin>
+        <version.license.plugin>5.0.0</version.license.plugin>
+        <exec.mainClass>dev.hardwood.examples.compat.Main</exec.mainClass>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Manages versions for all hardwood-* modules and their optional codecs. -->
+            <dependency>
+                <groupId>dev.hardwood</groupId>
+                <artifactId>hardwood-bom</artifactId>
+                <version>${version.hardwood}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- The drop-in parquet-java compatibility layer: org.apache.parquet.* shims backed by
+             Hardwood. This is the ONLY Hardwood dependency this example declares — it pulls in
+             hardwood-core transitively. It must NOT be on a classpath that also has the real
+             parquet-java, which owns the same org.apache.parquet.* package names. -->
+        <dependency>
+            <groupId>dev.hardwood</groupId>
+            <artifactId>hardwood-parquet-java-compat</artifactId>
+        </dependency>
+
+        <!-- The taxi files are ZSTD-compressed; this codec is an optional runtime dep. -->
+        <dependency>
+            <groupId>com.github.luben</groupId>
+            <artifactId>zstd-jni</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- `./mvnw compile exec:java` runs ${exec.mainClass}. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${version.exec.plugin}</version>
+                <configuration>
+                    <mainClass>${exec.mainClass}</mainClass>
+                </configuration>
+            </plugin>
+
+            <!-- Fail the build if a source file is missing the Apache license header.
+                 The check binds to process-sources, so `./mvnw compile` runs it too. -->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>${version.license.plugin}</version>
+                <configuration>
+                    <strictCheck>true</strictCheck>
+                    <licenseSets>
+                        <licenseSet>
+                            <header>etc/license.txt</header>
+                            <includes>
+                                <include>src/**</include>
+                                <include>pom.xml</include>
+                                <include>Dockerfile</include>
+                                <include>docker-compose.yaml</include>
+                            </includes>
+                        </licenseSet>
+                    </licenseSets>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                        <Dockerfile>SCRIPT_STYLE</Dockerfile>
+                    </mapping>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

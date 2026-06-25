@@ -71,6 +71,15 @@ jobs:
           path: ${{ matrix.example }}/data
           key: data-${{ matrix.example }}-${{ hashFiles(format('{0}/**/Datasets.java', matrix.example)) }}
 
+      # The parquet-java-compat example depends on hardwood-parquet-java-compat, which is
+      # not published to Maven Central yet. Build it from source into the local Maven
+      # repository first; every other example resolves its dependencies from Central.
+      # Remove this step once the module ships. See parquet-java-compat/build-compat.sh.
+      - name: Build the unpublished compat module from source
+        if: matrix.example == 'parquet-java-compat'
+        working-directory: ${{ matrix.example }}
+        run: ./build-compat.sh
+
       - name: Build and run
         working-directory: ${{ matrix.example }}
         run: ./mvnw -B -q compile exec:java
